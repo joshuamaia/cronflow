@@ -1,0 +1,102 @@
+<div [formGroup]="form()" class="schedule">
+  @switch (config().frequency) {
+    @case ('weekly') {
+      <div class="block">
+        <span class="block-label" id="weekdays-label">Dias da semana</span>
+        <div class="pills" role="group" aria-labelledby="weekdays-label">
+          @for (day of weekDays; track day.value) {
+            <button
+              type="button"
+              class="pill"
+              [class.selected]="isDaySelected(day.value)"
+              [attr.aria-pressed]="isDaySelected(day.value)"
+              [attr.aria-label]="day.name"
+              (click)="toggleDay(day.value)"
+            >
+              {{ day.short }}
+            </button>
+          }
+        </div>
+        @if (noWeekDays()) {
+          <p class="cf-note warning" role="alert">
+            <mat-icon>warning</mat-icon>
+            Selecione pelo menos um dia da semana.
+          </p>
+        }
+      </div>
+    }
+    @case ('monthly') {
+      <div class="block">
+        <mat-form-field appearance="outline" class="day-field" subscriptSizing="dynamic">
+          <mat-label>Dia do mês</mat-label>
+          <mat-select formControlName="dayOfMonth">
+            @for (day of daysOfMonth; track day) {
+              <mat-option [value]="day">Dia {{ day }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        @if (dayMayNotExist()) {
+          <p class="cf-note warning">
+            <mat-icon>info</mat-icon>
+            Meses sem o dia {{ config().dayOfMonth }} não terão execução: o Spring não transfere a
+            execução para outro dia.
+          </p>
+        }
+      </div>
+    }
+  }
+
+  @if (intervalField(); as field) {
+    <div class="block">
+      <span class="block-label" id="interval-label">Intervalo</span>
+      <div class="pills" role="radiogroup" aria-labelledby="interval-label">
+        @for (value of field.values; track value) {
+          <button
+            type="button"
+            role="radio"
+            class="pill"
+            [class.selected]="value === field.current"
+            [attr.aria-checked]="value === field.current"
+            (click)="selectInterval(field.control, value)"
+          >
+            {{ value }} {{ field.unit }}
+          </button>
+        }
+      </div>
+      <p class="cf-note">
+        <mat-icon>info</mat-icon>
+        Alinhado ao relógio CRON ({{ field.anchors }}…), e não ao momento em que o agendamento foi
+        criado.
+      </p>
+    </div>
+  } @else {
+    <div class="block">
+      <div class="time-grid">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Hora</mat-label>
+          <mat-select formControlName="hour">
+            @for (hour of hours; track hour) {
+              <mat-option [value]="hour">{{ pad(hour) }} h</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Minuto</mat-label>
+          <mat-select formControlName="minute">
+            @for (minute of minutes; track minute) {
+              <mat-option [value]="minute">{{ pad(minute) }} min</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Segundo</mat-label>
+          <mat-select formControlName="second">
+            @for (second of minutes; track second) {
+              <mat-option [value]="second">{{ pad(second) }} s</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  }
+</div>

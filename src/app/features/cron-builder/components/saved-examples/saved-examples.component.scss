@@ -1,0 +1,146 @@
+.cf-card-header {
+  align-items: center;
+  flex-wrap: wrap;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.count {
+  padding: 2px 8px;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px dashed var(--cf-border-strong);
+  border-radius: var(--cf-radius-sm);
+
+  mat-icon {
+    flex: none;
+    color: var(--cf-accent-strong);
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--cf-text-muted);
+  }
+
+  strong {
+    color: var(--cf-text);
+  }
+}
+
+// Sem limite de itens: a lista rola internamente para não empurrar o construtor.
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr));
+  gap: 8px;
+  max-height: 320px;
+  margin: 0;
+  padding: 0 4px 0 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding-right: 4px;
+  background: var(--cf-surface-2);
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  transition: border-color 160ms var(--cf-ease), background 160ms var(--cf-ease);
+
+  &:hover {
+    border-color: var(--cf-border-strong);
+  }
+
+  &.active {
+    border-color: var(--cf-accent);
+    background: var(--cf-accent-soft);
+  }
+}
+
+.apply {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 10px 12px;
+  text-align: left;
+  font: inherit;
+  color: var(--cf-text);
+  background: none;
+  border: 0;
+  border-radius: var(--cf-radius-sm);
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--cf-accent);
+    outline-offset: -2px;
+  }
+}
+
+.icon {
+  flex: none;
+  color: var(--cf-accent-strong);
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.title,
+.subtitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.title {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  font-size: 0.75rem;
+  color: var(--cf-text-muted);
+}
+
+code {
+  flex: none;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--cf-mono);
+  font-size: 0.8rem;
+  color: var(--cf-accent-strong);
+
+  @media (max-width: 480px) {
+    display: none;
+  }
+}
+
+.actions {
+  display: flex;
+  flex: none;
+  color: var(--cf-text-muted);
+
+  .delete:hover {
+    color: var(--cf-danger);
+  }
+}

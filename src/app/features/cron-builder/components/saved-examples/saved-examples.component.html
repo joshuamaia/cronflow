@@ -1,0 +1,75 @@
+<section class="cf-card" aria-labelledby="saved-examples-title">
+  <header class="cf-card-header">
+    <div>
+      <h2 id="saved-examples-title">
+        Meus exemplos
+        @if (count() > 0) {
+          <span class="cf-chip accent count">{{ count() }}</span>
+        }
+      </h2>
+      <p>
+        @if (persistent) {
+          Salvos neste navegador · sem limite de quantidade
+        } @else {
+          O navegador bloqueou o armazenamento: os exemplos duram até recarregar a página
+        }
+      </p>
+    </div>
+    <button matButton="filled" type="button" (click)="create()">
+      <mat-icon>add</mat-icon>
+      Novo exemplo
+    </button>
+  </header>
+
+  @if (items().length === 0) {
+    <div class="empty">
+      <mat-icon>bookmark_add</mat-icon>
+      <p>
+        Você ainda não criou exemplos. Use <strong>Novo exemplo</strong> para salvar um
+        agendamento. Ele começa com a configuração atual do construtor.
+      </p>
+    </div>
+  } @else {
+    <ul class="list">
+      @for (item of items(); track item.id) {
+        <li class="row" [class.active]="item.expression === activeExpression()">
+          <button
+            type="button"
+            class="apply"
+            [attr.aria-pressed]="item.expression === activeExpression()"
+            [attr.aria-label]="'Aplicar o exemplo ' + item.title"
+            (click)="apply.emit(item.config)"
+          >
+            <mat-icon class="icon">{{ item.icon }}</mat-icon>
+            <span class="text">
+              <span class="title">{{ item.title }}</span>
+              <span class="subtitle">{{ item.subtitle }}</span>
+            </span>
+            <code>{{ item.expression }}</code>
+          </button>
+          <span class="actions">
+            <button
+              matIconButton
+              type="button"
+              matTooltip="Editar"
+              [attr.aria-label]="'Editar o exemplo ' + item.title"
+              (click)="edit(item.id)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              matIconButton
+              type="button"
+              class="delete"
+              matTooltip="Excluir"
+              [attr.aria-label]="'Excluir o exemplo ' + item.title"
+              (click)="remove(item.id)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </span>
+        </li>
+      }
+    </ul>
+  }
+</section>

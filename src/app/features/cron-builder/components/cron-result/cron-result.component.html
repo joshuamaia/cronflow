@@ -1,0 +1,53 @@
+<section class="cf-card" aria-labelledby="cron-result-title">
+  <header class="cf-card-header">
+    <div>
+      <h2 id="cron-result-title">Expressão CRON gerada</h2>
+      <p>Padrão Spring Framework · 6 campos</p>
+    </div>
+    @if (expression()) {
+      <span class="cf-chip success"><mat-icon>check_circle</mat-icon>Válida</span>
+    } @else {
+      <span class="cf-chip danger"><mat-icon>error</mat-icon>Inválida</span>
+    }
+  </header>
+
+  @if (expression(); as cron) {
+    <div class="expression" aria-live="polite">
+      <code>{{ cron }}</code>
+    </div>
+    <ol class="fields" aria-label="Campos da expressão">
+      @for (field of fields(); track $index) {
+        <li>
+          <span class="value">{{ field.value }}</span>
+          <span class="label">{{ field.label }}</span>
+        </li>
+      }
+    </ol>
+    @if (description(); as text) {
+      <p class="description">
+        <mat-icon>translate</mat-icon>
+        <span>{{ text }}</span>
+      </p>
+    }
+  } @else {
+    <div class="expression invalid">
+      <code>— — — — — —</code>
+    </div>
+    <ul class="errors" role="alert">
+      @for (error of errors(); track error) {
+        <li><mat-icon>warning</mat-icon>{{ error }}</li>
+      }
+    </ul>
+  }
+
+  <button
+    matButton="filled"
+    class="copy"
+    type="button"
+    [disabled]="!expression()"
+    (click)="copy()"
+  >
+    <mat-icon>content_copy</mat-icon>
+    Copiar CRON
+  </button>
+</section>

@@ -1,0 +1,65 @@
+<h2 mat-dialog-title>
+  {{ data.mode === 'create' ? 'Novo exemplo' : 'Editar exemplo' }}
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="detailsForm" class="details" (ngSubmit)="save()" id="example-editor-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Nome</mat-label>
+      <input
+        matInput
+        formControlName="title"
+        [maxlength]="titleMax"
+        placeholder="Ex.: Backup noturno"
+        cdkFocusInitial
+      />
+      <mat-hint align="end">{{ titleLength() }}/{{ titleMax }}</mat-hint>
+      @if (detailsForm.controls.title.invalid) {
+        <mat-error>Informe um nome para o exemplo.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Descrição (opcional)</mat-label>
+      <input
+        matInput
+        formControlName="description"
+        [maxlength]="descriptionMax"
+        placeholder="Se vazia, usa a interpretação automática"
+      />
+      <mat-hint align="end">{{ descriptionLength() }}/{{ descriptionMax }}</mat-hint>
+    </mat-form-field>
+  </form>
+
+  <div class="step">
+    <h3 class="cf-step"><span class="cf-step-number">1</span>Frequência</h3>
+    <app-frequency-selector [value]="config().frequency" (valueChange)="setFrequency($event)" />
+  </div>
+
+  <div class="step">
+    <h3 class="cf-step"><span class="cf-step-number">2</span>Configuração</h3>
+    <app-schedule-config [form]="scheduleForm" [config]="config()" />
+  </div>
+
+  <div class="preview" aria-live="polite">
+    @if (expression(); as cron) {
+      <code>{{ cron }}</code>
+      @if (preview(); as text) {
+        <span>{{ text }}</span>
+      }
+    } @else {
+      <code class="invalid">— — — — — —</code>
+      @for (error of errors(); track error) {
+        <span class="error">{{ error }}</span>
+      }
+    }
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button matButton type="button" mat-dialog-close>Cancelar</button>
+  <button matButton="filled" type="submit" form="example-editor-form" [disabled]="!canSave()">
+    <mat-icon>save</mat-icon>
+    {{ data.mode === 'create' ? 'Criar exemplo' : 'Salvar alterações' }}
+  </button>
+</mat-dialog-actions>

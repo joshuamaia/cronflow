@@ -1,0 +1,68 @@
+<div [formGroup]="form()">
+  <div class="dates">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Data inicial</mat-label>
+      <input
+        matInput
+        formControlName="start"
+        placeholder="dd/mm/aaaa"
+        [matDatepicker]="startPicker"
+        [min]="minDate"
+        [max]="maxDate"
+      />
+      <mat-datepicker-toggle matIconSuffix [for]="startPicker" />
+      <mat-datepicker #startPicker />
+      @if (form().controls.start.hasError('matDatepickerParse')) {
+        <mat-error>Data inválida.</mat-error>
+      } @else if (form().controls.start.hasError('matDatepickerMin') || form().controls.start.hasError('matDatepickerMax')) {
+        <mat-error>Fora do intervalo suportado.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Data final</mat-label>
+      <input
+        matInput
+        formControlName="end"
+        placeholder="dd/mm/aaaa"
+        [matDatepicker]="endPicker"
+        [min]="start() ?? minDate"
+        [max]="maxDate"
+      />
+      <mat-datepicker-toggle matIconSuffix [for]="endPicker" />
+      <mat-datepicker #endPicker />
+      @if (form().controls.end.hasError('matDatepickerParse')) {
+        <mat-error>Data inválida.</mat-error>
+      } @else if (form().controls.end.hasError('matDatepickerMin')) {
+        <mat-error>Deve ser maior ou igual à data inicial.</mat-error>
+      } @else if (form().controls.end.hasError('matDatepickerMax')) {
+        <mat-error>Fora do intervalo suportado.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Execuções</mat-label>
+      <mat-select formControlName="limit">
+        @for (limit of limits; track limit) {
+          <mat-option [value]="limit">{{ limit }} execuções</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  @if (error(); as message) {
+    <p class="cf-note warning" role="alert">
+      <mat-icon>error</mat-icon>
+      {{ message }}
+    </p>
+  }
+
+  <p class="cf-note">
+    <mat-icon>public</mat-icon>
+    <span>
+      Fuso horário do navegador: <strong>{{ timeZone.name }}</strong> ({{ timeZone.offset }}). As
+      datas delimitam a busca — do início do dia inicial ao fim do dia final — e não alteram a
+      expressão CRON.
+    </span>
+  </p>
+</div>

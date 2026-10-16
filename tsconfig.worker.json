@@ -1,0 +1,15 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* Web Workers não têm acesso ao DOM: compilados com a lib "webworker". */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": [
+      "es2022",
+      "webworker"
+    ],
+    "types": []
+  },
+  "include": [
+    "src/**/*.worker.ts"
+  ]
+}

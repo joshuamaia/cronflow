@@ -1,0 +1,14 @@
+.dates {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: 12px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+strong {
+  color: var(--cf-text);
+  font-weight: 600;
+}

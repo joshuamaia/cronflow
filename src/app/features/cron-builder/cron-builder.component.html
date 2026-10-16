@@ -1,0 +1,48 @@
+<app-cron-examples
+  class="examples"
+  [activeExpression]="expression()"
+  (selected)="applyConfig($event.config)"
+/>
+
+<app-saved-examples
+  class="saved-examples"
+  [currentConfig]="config()"
+  [activeExpression]="expression()"
+  (apply)="applyConfig($event)"
+/>
+
+<div class="layout">
+  <section class="cf-card builder" aria-labelledby="builder-title">
+    <header class="cf-card-header">
+      <div>
+        <h2 id="builder-title">Construtor</h2>
+        <p>Monte o agendamento sem escrever a sintaxe CRON</p>
+      </div>
+      <span class="cf-chip accent">Interativo</span>
+    </header>
+
+    <div class="step">
+      <h3 class="cf-step"><span class="cf-step-number">1</span>Qual a frequência?</h3>
+      <app-frequency-selector [value]="frequency()" (valueChange)="setFrequency($event)" />
+    </div>
+
+    <div class="step">
+      <h3 class="cf-step"><span class="cf-step-number">2</span>{{ configStepTitle() }}</h3>
+      <app-schedule-config [form]="scheduleForm" [config]="config()" />
+    </div>
+
+    <div class="step">
+      <h3 class="cf-step"><span class="cf-step-number">3</span>Período de simulação</h3>
+      <app-simulation-period
+        [form]="periodForm"
+        [start]="periodValue().start"
+        [error]="periodError()"
+      />
+    </div>
+  </section>
+
+  <aside class="results" aria-label="Resultados">
+    <app-cron-result [generation]="generation()" [description]="description()" />
+    <app-execution-timeline [state]="simulation()" [limit]="limit()" />
+  </aside>
+</div>

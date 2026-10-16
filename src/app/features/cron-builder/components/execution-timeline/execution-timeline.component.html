@@ -1,0 +1,97 @@
+<section class="cf-card" aria-labelledby="timeline-title" [attr.aria-busy]="state().status === 'calculating'">
+  <header class="cf-card-header">
+    <div>
+      <h2 id="timeline-title">Próximas execuções</h2>
+      <p>Prévia dentro do período selecionado · até {{ limit() }} execuções</p>
+    </div>
+    @switch (state().status) {
+      @case ('calculating') {
+        <span class="cf-chip accent"><mat-icon>autorenew</mat-icon>Calculando</span>
+      }
+      @case ('done') {
+        <span class="cf-chip success"><mat-icon>task_alt</mat-icon>{{ items().length }} encontradas</span>
+      }
+    }
+  </header>
+
+  <div class="progress">
+    @if (state().status === 'calculating') {
+      <mat-progress-bar mode="indeterminate" />
+    }
+  </div>
+
+  @switch (state().status) {
+    @case ('waiting') {
+      <div class="status">
+        <mat-icon>hourglass_empty</mat-icon>
+        <strong>Aguardando configuração</strong>
+        <p>Defina o agendamento e o período para simular as execuções.</p>
+      </div>
+    }
+    @case ('calculating') {
+      <ol class="timeline skeleton" aria-hidden="true">
+        @for (placeholder of placeholders(); track $index) {
+          <li class="item"><span class="bar"></span></li>
+        }
+      </ol>
+    }
+    @case ('done') {
+      <ol class="timeline">
+        @for (item of items(); track item.iso) {
+          <li class="item" [style.animation-delay.ms]="item.position * 25">
+            <span class="position" aria-hidden="true">{{ item.position }}</span>
+            <div class="calendar" aria-hidden="true">
+              <span class="day">{{ item.day }}</span>
+              <span class="month">{{ item.month }}</span>
+            </div>
+            <div class="details">
+              <span class="weekday">{{ item.weekday }}</span>
+              <time class="date" [attr.datetime]="item.iso">{{ item.date }}</time>
+            </div>
+            <span class="time">
+              {{ item.time }}
+              <mat-icon>check_circle</mat-icon>
+            </span>
+            <span class="sr-only">
+              Execução {{ item.position }}: {{ item.date }}, {{ item.weekday }}, {{ item.time }}
+            </span>
+          </li>
+        }
+      </ol>
+      @if (items().length < limit()) {
+        <p class="cf-note">
+          <mat-icon>info</mat-icon>
+          Não há mais execuções dentro do período selecionado.
+        </p>
+      }
+    }
+    @case ('empty') {
+      <div class="status">
+        <mat-icon>event_busy</mat-icon>
+        <strong>Nenhuma execução no período</strong>
+        <p>A expressão é válida, mas não ocorre entre as datas informadas. Amplie o período.</p>
+      </div>
+    }
+    @case ('invalid') {
+      <div class="status warning">
+        <mat-icon>rule</mat-icon>
+        <strong>Configuração inválida</strong>
+        <p>{{ message() }}</p>
+      </div>
+    }
+    @case ('timeout') {
+      <div class="status danger" role="alert">
+        <mat-icon>timer_off</mat-icon>
+        <strong>Tempo excedido</strong>
+        <p>{{ message() }}</p>
+      </div>
+    }
+    @case ('error') {
+      <div class="status danger" role="alert">
+        <mat-icon>report</mat-icon>
+        <strong>Erro de processamento</strong>
+        <p>{{ message() }}</p>
+      </div>
+    }
+  }
+</section>
